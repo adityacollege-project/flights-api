@@ -1,0 +1,174 @@
+application:
+  title: flights-api
+  formatted-version: (0.0.1-SNAPSHOT)
+server:
+  port: 8080
+  servlet:
+    context-path: /flights
+spring:
+  output:
+    ansi:
+      enabled: ALWAYS
+  data:
+    mongodb:
+      host: localhost
+      port: 27017
+      database: ardordb
+      username: DEC(appUser)
+      password: DEC(ard0r@pp)
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ardor
+    username: DEC(postgresadmin)
+    password: DEC(P0stgres@dm1n)
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+logging:
+  level:
+    com:
+      ardor:
+        flights: INFO
+springdoc:
+  swagger-ui:
+    enabled: true
+  Local_URL: http://localhost:8080/flights
+  AWS_URL: http://52.45.110.32:8080/flights
+flights:
+  mondee:
+    accessToken: 5160859e9b2447a9a82727abd992ffdd
+    search:
+      endPoint: /resources/v2/Flights/search
+      uri: http://mas2.trippro.com
+      api:
+        connection:
+          timeout:
+            in:
+              seconds: 20
+        read:
+          timeout:
+            in:
+              seconds: 60
+    reprice:
+      endPoint: /resources/api/v6/repriceitinerary
+      uri: http://map2.trippro.com
+      api:
+        connection:
+          timeout:
+            in:
+              seconds: 20
+        read:
+          timeout:
+            in:
+              seconds: 60
+    seatMap:
+      endPoint: /seatAvailSearch
+      uri: http://map2.trippro.com
+      api:
+        connection:
+          timeout:
+            in:
+              seconds: 20
+        read:
+          timeout:
+            in:
+              seconds: 60
+    booking:
+      endPoint: /resources/v4/Flights/bookItinerary
+      uri: http://map2.trippro.com
+      api:
+        connection:
+          timeout:
+            in:
+              seconds: 20
+        read:
+          timeout:
+            in:
+              seconds: 60
+    cancel:
+        endPoint: /resources/api/v4/cancelPnr
+        uri: http://map2.trippro.com
+        api:
+          connection:
+            timeout:
+              in:
+                seconds: 20
+          read:
+            timeout:
+              in:
+                seconds: 60
+    readPnr:
+      endPoint: /resources/api/v4/readPnr
+      uri: http://map2.trippro.com
+      api:
+        connection:
+          timeout:
+            in:
+              seconds: 20
+        read:
+          timeout:
+            in:
+              seconds: 60
+    orderticket:
+      endPoint: /resources/ticketOrder
+      uri: http://map2.trippro.com
+      api:
+        connection:
+          timeout:
+            in:
+              seconds: 20
+        read:
+          timeout:
+            in:
+              seconds: 60
+  user:
+    endpoint: /getUser
+    uri: http://52.45.110.32:8083/ardor
+    api:
+      connection:
+        timeout:
+          in:
+            seconds: 20
+      read:
+        timeout:
+          in:
+            seconds: 60
+redis:
+  cache:
+    redis-host: localhost
+    redis-port: 6379
+    timeout-seconds: 900
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      mondeeFlightSearch:
+        slidingWindowType: COUNT_BASED
+        slidingWindowSize: 5
+        failureRateThreshold: 50
+        slowCallRateThreshold: 50
+        slowCallDurationThreshold: 20
+        permittedNumberOfCallsInHalfOpenState: 2
+        waitDurationInOpenState: 20
+
+jasypt:
+  encryptor:
+    password: ${JASYPT_ENCRYPTOR_PASSWORD}
+
+management:
+  endpoints:
+    web:
+      base-path: /actuator
+      exposure:
+        include: [ "health","prometheus","metrics" ]
+  endpoint:
+    health:
+      show-details: always
+    metrics:
+      enabled: true
+    prometheus:
+      enabled: true

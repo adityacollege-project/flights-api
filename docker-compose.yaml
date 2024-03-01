@@ -1,0 +1,47 @@
+version: "4.2"
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:16.1
+    restart: always
+    environment:
+      POSTGRES_DB: ardor
+      POSTGRES_USER: postgresadmin
+      POSTGRES_PASSWORD: P0stgres@dm1n
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./sql-scripts:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:5.0.23
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: ardordb
+      MONGO_INITDB_ROOT_USERNAME: mongoroot
+      MONGO_INITDB_ROOT_PASSWORD: M0ng0@dm1n
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongo_data:/data/db
+
+  redis:
+    container_name: redis-cache
+    image: redis:7.2.3
+    restart: always
+    environment:
+      REDIS_PASSWORD: Red1$@dm1n
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+volumes:
+  redis_data:
+    driver: local
+  mongo_data:
+    driver: local
+  postgres_data:
+    driver: local
